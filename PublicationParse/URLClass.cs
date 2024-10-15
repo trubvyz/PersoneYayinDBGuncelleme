@@ -1,19 +1,14 @@
-﻿using System.Runtime.Caching;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Reflection.Metadata;
+using System.Runtime.Caching;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PublicationParse
 {
     public static class URLClass
     {
-        public static async Task<List<AktifYazarModel>> GetAktifYazarModelAsync()
+        public static async Task<List<AktifYazarModel>?> GetAktifYazarModelAsync()
         {
 
             var baseAddress = Constants.informationDict["HavuzdanAktifYazarAra"];
@@ -34,19 +29,19 @@ namespace PublicationParse
 
                 return null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
-                
+
             }
         }
 
         #region GetWorkers
-        public static async Task<dynamic> GetWorkersFromUBYS()
+        public static async Task<dynamic?> GetWorkersFromUBYS()
         {
             var baseAddress = Constants.informationDict["UBYSService"];
 
-            var birimKullaniciAdi = Constants.UBYSServiceInformation["username"];           
+            var birimKullaniciAdi = Constants.UBYSServiceInformation["username"];
             var birimKullaniciSifre = Constants.UBYSServiceInformation["password"];
 
             string encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{birimKullaniciAdi}:{birimKullaniciSifre}"));
@@ -63,17 +58,9 @@ namespace PublicationParse
             {
                 HttpResponseMessage response = await client.PostAsync(baseAddress, content);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsStringAsync();
-                }
-
-                else
-                {
-                    return null;
-                }
+                return response.IsSuccessStatusCode ? await response.Content.ReadAsStringAsync() : null as dynamic;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -82,7 +69,7 @@ namespace PublicationParse
 
         }
 
-        public static async Task<List<User>> GetWorkersFromUBYSCache()
+        public static async Task<List<User>?> GetWorkersFromUBYSCache()
         {
             var cache = MemoryCache.Default;
             if (cache["Workers"] is List<User> workers)
@@ -95,9 +82,14 @@ namespace PublicationParse
             {
                 var allWorkers = await GetWorkersFromUBYS();
 
+                if (allWorkers is null or ((dynamic)"\"Access is denied.\""))
+                {
+                    return null;
+                }
+
                 List<User> workersList = JsonConvert.DeserializeObject<List<User>>(allWorkers);
                 // Verileri MemoryCache'e ekle
-                cache.Add("Workers", workersList, DateTime.Now.AddDays(30));
+                _ = cache.Add("Workers", workersList, DateTime.Now.AddDays(30));
 
                 return workersList;
 
@@ -106,7 +98,7 @@ namespace PublicationParse
 
         #endregion
 
-        public static async Task<string> GetAcademicCVbyAuthor(int authorId, int personId)
+        public static async Task<string?> GetAcademicCVbyAuthor(int authorId, int personId)
         {
             var baseAddress = Constants.informationDict["GetAcademicCVbyAuthor"];
 
@@ -134,15 +126,11 @@ namespace PublicationParse
                     return null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
-
-
-
         }
-
     }
 }
 

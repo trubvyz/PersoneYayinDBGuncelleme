@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PublicationParse
 {
+    public class AktifYazarModel
+    {
+        public int Id { get; set; }
+        public int PersonId { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string CorporateInformation { get; set; }
+        public bool IsEmployee { get; set; }
+        public string EMail { get; set; }
+        public bool IsActive { get; set; }
+        public string LastAutoUpdateTime { get; set; }
+    }
     public class User
     {
-        public int? PersonId { get; set; }
+        public int PersonId { get; set; }
         public string TcNumarasi { get; set; }
         public string Uyruk { get; set; }
         public string Adi { get; set; }
@@ -35,7 +42,7 @@ namespace PublicationParse
         public int? GorevYeriId { get; set; }
         public string GorevYeri { get; set; }
         public DateTime? GoreveBaslamaTarihi { get; set; }
-        public string KurumdanAyrilisTarihi { get; set; }
+        public DateTime? KurumdanAyrilisTarihi { get; set; }
         public int? KadroTipiId { get; set; }
         public string KadroTipi { get; set; }
         public string KadroKodu { get; set; }
@@ -69,23 +76,144 @@ namespace PublicationParse
         public string KisiselTelefon { get; set; }
     }
 
-    public class UserInfo
+    public class Article
+    {
+        public string? YAYIN_ID { get; set; }
+        public string? KAPSAM_ID { get; set; }
+        public string? KAPSAM_AD { get; set; }
+        public string? HAKEM_TUR { get; set; }
+        public string? HAKEM_TUR_AD { get; set; }
+        public string? ENDEKS_ID { get; set; }
+        public string? ENDEKS { get; set; }
+        public required string MAKALE_ADI { get; set; }
+        public string? YAZAR_ADI { get; set; }
+        public string? YAZAR_SAYISI { get; set; }
+        public string? ULKE { get; set; }
+        public string? ULKE_ADI { get; set; }
+        public string? SEHIR { get; set; }
+        public string? DERGI_ADI { get; set; }
+        public string? YAYIN_DILI { get; set; }
+        public string? YAYIN_DILI_ADI { get; set; }
+        public string? AY { get; set; }
+        public string? YIL { get; set; }
+        public string? CILT { get; set; }
+        public string? SAYI { get; set; }
+        public string? ILK_SAYFA { get; set; }
+        public string? SON_SAYFA { get; set; }
+        public string? DOI { get; set; }
+        public string? ISSN { get; set; }
+        public string? ERISIM_TURU { get; set; }
+        public string? ERISIM_TURU_AD { get; set; }
+        public string? ERISIM_LINKI { get; set; }
+        public string? ATIF_SAYISI { get; set; }
+        public string? ALAN_BILGISI { get; set; }
+        public string? ANAHTAR_KELIME { get; set; }
+        public string? OZEL_SAYI { get; set; }
+        public string? OZEL_SAYI_AD { get; set; }
+        public string? SPONSOR { get; set; }
+        public string? YAZAR_ID { get; set; }
+        public string? GUNCELLEME_TARIHI { get; set; }
+        public string? AKTIF_PASIF { get; set; }
+        public string? AKTIF_PASIF_AD { get; set; }
+        public string? MAKALE_TURU_ID { get; set; }
+        public string? MAKALE_TURU_AD { get; set; }
+        public string? TESV_PUAN { get; set; }
+        public int? Year { get; set; }
+        public string? MainText { get; set; }
+        public int? EntityTypeId { get; set; }
+        public string? EntityTypeName { get; set; }
+    } //*/
+
+    public class Base64Decoded
+    {
+        public Article[]? AE_2098001 { get; set; }
+    } // TODO
+
+    public class Academicians
     {
         [Key]
-        public int Id { get; set; }
+        public int PersonID { get; set; }
 
-        public int AuthorId { get; set; }
-
-        public int PersonId { get; set; }
+        public string? AuthorID { get; set; }
 
         public string? Title { get; set; }
-
-        public string? KadroUnvan { get; set; }
 
         public string? Faculty { get; set; }
 
         public string? Department { get; set; }
 
         public string? MSB { get; set; }
+
+        public DateTime? StartDate { get; set; }
+
+        public string? SurnameName { get; set; }
+    }
+    public class Articles
+    {
+        public int PersonID { get; set; }
+
+        public string ArticleName { get; set; }
+
+        public string? Index { get; set; }
+
+        public string? AuthorNames { get; set; }
+
+        public int? ArticleID { get; set; }
+
+        public DateTime? Year { get; set; }
+
+        public int? IndexID { get; set; }
+
+        public int? ScopeID { get; set; }
+
+        public string? JournalName { get; set; }
+
+        public string? CountryName { get; set; }
+
+        public string? City { get; set; }
+
+        public string? ArticleLangName { get; set; }
+
+        public string? Issue { get; set; }
+
+        public string? DOI { get; set; }
+
+        public string? ISSN { get; set; }
+
+        public string? AccessType { get; set; }
+
+        public string? AccessLink { get; set; }
+
+        public int? CiteCount { get; set; }
+
+        public string? AreaInfo { get; set; }
+
+        public string? Keywrds { get; set; }
+
+        public string? TESVPoint { get; set; }
+
+        public string? EntityTypeID { get; set; }
+
+    }
+    public class Projects
+    {
+        public int PersonID { get; set; }
+
+        public string ProjectName { get; set; }
+
+        public string? GeneralType { get; set; }
+
+        public string? SubType { get; set; }
+
+        public DateTime? StartDate { get; set; }
+
+        public DateTime? FinishDate { get; set; }
+
+        public string? State { get; set; }
+
+        public string? OrganisationBudget { get; set; }
+
+        public string? Budget { get; set; }
+
     }
 }
