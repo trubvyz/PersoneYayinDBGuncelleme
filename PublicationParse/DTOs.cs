@@ -134,8 +134,6 @@ namespace PublicationParse
         [Key]
         public int PersonID { get; set; }
 
-        public string? AuthorID { get; set; }
-
         public string? Title { get; set; }
 
         public string? Faculty { get; set; }
@@ -147,6 +145,7 @@ namespace PublicationParse
         public DateTime? StartDate { get; set; }
 
         public string? SurnameName { get; set; }
+        public string? PersonEncryptedId { get; set; }
     }
     public class Articles
     {

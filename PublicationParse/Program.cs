@@ -4,17 +4,17 @@ using System.Text.RegularExpressions;
 
 async Task MyAsyncFunction()
 {
-    using var context = new Context();
+    using Context context = new();
 
-    var aktifYazars = await URLClass.GetAktifYazarModelAsync();
-    var allWorkers = await URLClass.GetWorkersFromUBYSCache();
-    if (aktifYazars != null && allWorkers != null)
+    List<User>? allWorkers = await URLClass.GetWorkersFromUBYSCache();
+    if (allWorkers != null)
     {
         List<int> persons = [];
-        foreach (var worker in allWorkers)
+        foreach (User worker in allWorkers)
         {
             int personID = 0;
-            string? authorID = null, surnameName = null;
+            string personEncryptedId = string.Empty;
+            string? surnameName = null;
             string? title = null, faculty = null, department = null, MSB = null;
             DateTime? startDate = null;
             List<Academicians> academicians = [];
@@ -23,20 +23,17 @@ async Task MyAsyncFunction()
             if (worker.KadroKodu == "AKADEMİK")
             {
                 personID = worker.PersonId;
-                if (aktifYazars.FirstOrDefault(s => s.PersonId == personID) != null && aktifYazars.FirstOrDefault(s => s.PersonId == personID)?.Id != null)
-                {
-                    authorID = aktifYazars.FirstOrDefault(s => s.PersonId == personID)?.Id.ToString();
-                }
+                personEncryptedId = worker.PersonEncryptedId;
                 title = worker.AsliUnvan;
                 startDate = worker.GoreveBaslamaTarihi;
                 surnameName = worker.Soyadi + " " + worker.Adi;
-                var sql = context.Academicians.SingleOrDefault(s => s.PersonID == worker.PersonId);
-                if (authorID != null && title != null && title != "" && worker.KurumdanAyrilisTarihi == null)
+                Academicians? sql = context.Academicians.SingleOrDefault(s => s.PersonID == worker.PersonId);
+                if (title != null && title != "" && worker.KurumdanAyrilisTarihi == null)
                 {
-                    var academicCV = await URLClass.GetAcademicCVbyAuthor(int.Parse(authorID), personID);
+                    string? academicCV = await URLClass.GetAcademicCVbyAuthor(personEncryptedId);
                     if (academicCV != null)
                     {
-                        var palace = AcademicCVParse.WorkingPlaces(academicCV);
+                        List<string> palace = AcademicCVParse.WorkingPlaces(academicCV);
                         if (palace.Count >= 3)
                         {
                             faculty = palace[2];
@@ -53,13 +50,13 @@ async Task MyAsyncFunction()
                     Academicians academic = new()
                     {
                         PersonID = personID,
-                        AuthorID = authorID,
                         Title = title,
                         Faculty = faculty,
                         Department = department,
                         MSB = MSB,
                         StartDate = startDate,
                         SurnameName = surnameName,
+                        PersonEncryptedId = personEncryptedId
                     };
                     persons.Add(personID);
                     if (sql == null)
@@ -71,13 +68,13 @@ async Task MyAsyncFunction()
                     else if (sql != academic)
                     {
                         sql.PersonID = personID;
-                        sql.AuthorID = authorID;
                         sql.Title = title;
                         sql.Faculty = faculty;
                         sql.Department = department;
                         sql.MSB = MSB;
                         sql.StartDate = startDate;
                         sql.SurnameName = surnameName;
+                        sql.PersonEncryptedId = personEncryptedId;
                         _ = context.SaveChanges();
                     }
                 }
@@ -110,16 +107,16 @@ async Task MyAsyncFunction()
         Console.WriteLine("Access is Denied for authors.");
     }
 
-    var academics = context.Academicians.Select(s => new { s.PersonID, s.AuthorID });
+    var academics = context.Academicians.Select(s => new { s.PersonID, s.PersonEncryptedId });
     List<Articles> allArticles = [];
     foreach (var aca in academics)
     {
-        var academicCVbyAuthorString = await URLClass.GetAcademicCVbyAuthor(int.Parse(aca.AuthorID), aca.PersonID);
-        var base64encodedString = AcademicCVParse.GetPublications(academicCVbyAuthorString);
-        var sonuc = JsonConvert.DeserializeObject<Base64Decoded>(base64encodedString);
+        string? academicCVbyAuthorString = await URLClass.GetAcademicCVbyAuthor(aca.PersonEncryptedId);
+        string base64encodedString = AcademicCVParse.GetPublications(academicCVbyAuthorString);
+        Base64Decoded? sonuc = JsonConvert.DeserializeObject<Base64Decoded>(base64encodedString);
         if (sonuc.AE_2098001 != null)
         {
-            foreach (var artic in sonuc.AE_2098001)
+            foreach (Article artic in sonuc.AE_2098001)
             {
                 string day = "1/";
                 string month = artic.AY ?? "1";
@@ -158,9 +155,9 @@ async Task MyAsyncFunction()
     }
     string pattern = "[^a-zA-Z0-9 ]";
     List<Articles> correctedArticles = [];
-    foreach (var article in allArticles)
+    foreach (Articles article in allArticles)
     {
-        var articleName = string.Join("", article.ArticleName.Where(x => x != ' '))
+        string articleName = string.Join("", article.ArticleName.Where(x => x != ' '))
             .ToLower().Trim()
             .Replace('ı', 'i')
             .Replace('ğ', 'g')
@@ -177,15 +174,15 @@ async Task MyAsyncFunction()
             List<string> authorsSplitted = [.. article.AuthorNames.Split(",")];
             article.PersonID = 0;
             bool chk = false;
-            foreach (var author in authorsSplitted)
+            foreach (string author in authorsSplitted)
             {
                 if (article.Year == null || article.Year < new DateTime(2018, 5, 8))
                 {
                     break;
                 }
-                foreach (var worker in context.Academicians)
+                foreach (Academicians worker in context.Academicians)
                 {
-                    var workerSurnameandName = worker.SurnameName.ToLower().Trim()
+                    string workerSurnameandName = worker.SurnameName.ToLower().Trim()
                         .Replace('ı', 'i')
                         .Replace('ğ', 'g')
                         .Replace('ğ', 'g')
@@ -194,7 +191,7 @@ async Task MyAsyncFunction()
                         .Replace('ö', 'o')
                         .Replace('ç', 'c');
                     workerSurnameandName = string.Join("", workerSurnameandName.Where(x => x != ' '));
-                    var authorSurnameandName = author.ToLower().Trim()
+                    string authorSurnameandName = author.ToLower().Trim()
                         .Replace('ı', 'i')
                         .Replace('ğ', 'g')
                         .Replace('ğ', 'g')
@@ -208,8 +205,8 @@ async Task MyAsyncFunction()
                         article.PersonID = worker.PersonID;
                         correctedArticles.Add(article);
                         chk = true;
-                        using var context2 = new Context();
-                        var t = context2.Articles.SingleOrDefault(s => s.PersonID == article.PersonID && s.ArticleName == article.ArticleName);
+                        using Context context2 = new();
+                        Articles? t = context2.Articles.SingleOrDefault(s => s.PersonID == article.PersonID && s.ArticleName == article.ArticleName);
                         if (t == null)
                         {
                             _ = context2.Articles.Add(article);
@@ -227,7 +224,7 @@ async Task MyAsyncFunction()
     }
 }
 
-var timer = new Timer(async _ =>
+Timer timer = new(async _ =>
 {
     await MyAsyncFunction();
 }, null, TimeSpan.Zero, TimeSpan.FromDays(25));

@@ -4,7 +4,6 @@
     {
         public static Dictionary<string, string> informationDict = new()
         {
-            {"HavuzdanAktifYazarAra", "https://ubys.trabzon.edu.tr/ABPDS/AcademicInformation/BilgiGoruntulemeV2/HavuzdanAktifYazarAra"},
             {"GetAcademicCVbyAuthor", "https://ubys.trabzon.edu.tr/ABPDS/AcademicInformation/BilgiGoruntulemeV2/GetAcademicCVbyAuthor"},
             {"UBYSService", "https://ubys.trabzon.edu.tr/Framework/Integration/ServiceCaller/Report" }
         };

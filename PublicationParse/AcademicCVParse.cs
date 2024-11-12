@@ -38,7 +38,7 @@ namespace PublicationParse
             return results;
         }
 
-        public static string GetPublications(string academicCVbyAuthorString)
+        public static string? GetPublications(string academicCVbyAuthorString)
         {
             // Başlangıç ve bitiş desenleri
             string baslangicDeseni = "JSON.parse(Base64.decode(\"";
