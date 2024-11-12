@@ -75,9 +75,6 @@ namespace PublicationParse
             string baseAddress = Constants.informationDict["GetAcademicCVbyAuthor"];
 
             using HttpClient client = new();
-            /*client.BaseAddress = new Uri(baseAddress);
-            client.DefaultRequestHeaders.Accept.Clear();//*/
-
 
             string authorId = "!xBBx!qzOzv8aBh2KmxUxrWj7ig!xGGx!!xGGx!";
 
@@ -86,8 +83,6 @@ namespace PublicationParse
                 authorId,
                 personId
             };
-
-            /*StringContent content = new(data, Encoding.UTF8, "application/json");//*/
 
             try
             {
