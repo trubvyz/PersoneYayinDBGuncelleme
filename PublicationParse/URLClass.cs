@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Dynamic;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -84,8 +83,8 @@ namespace PublicationParse
 
             var data = new
             {
-                authorId = authorId,
-                personId = personId
+                authorId,
+                personId
             };
 
             /*StringContent content = new(data, Encoding.UTF8, "application/json");//*/
