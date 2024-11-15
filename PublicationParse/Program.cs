@@ -99,6 +99,7 @@ async Task MyAsyncFunction()
         }
         context.Projects.RemoveRange(context.Projects.Where(s => !persons.Contains(s.PersonID)).ToList());
         context.Articles.RemoveRange(context.Articles.Where(s => !persons.Contains(s.PersonID)).ToList());
+        _ = context.SaveChanges();
         context.Academicians.RemoveRange(context.Academicians.Where(s => !persons.Contains(s.PersonID)).ToList());
         _ = context.SaveChanges();
     }
