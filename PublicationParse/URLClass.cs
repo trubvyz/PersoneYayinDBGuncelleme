@@ -37,9 +37,6 @@ namespace PublicationParse
             {
                 return null;
             }
-
-
-
         }
 
         public static async Task<List<User>?> GetWorkersFromUBYSCache()
@@ -67,7 +64,6 @@ namespace PublicationParse
                 return workersList;
             }
         }
-
         #endregion
 
         public static async Task<string?> GetAcademicCVbyAuthor(string personId)
@@ -96,7 +92,6 @@ namespace PublicationParse
 
                     return resNew;
                 }
-
                 else
                 {
                     return null;

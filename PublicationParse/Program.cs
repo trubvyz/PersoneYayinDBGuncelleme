@@ -224,8 +224,9 @@ async Task MyAsyncFunction()
     }
 }
 
-Timer timer = new(async _ =>
-{
-    await MyAsyncFunction();
-}, null, TimeSpan.Zero, TimeSpan.FromDays(25));
-await Task.Delay(Timeout.Infinite);
+await MyAsyncFunction();
+//Timer timer = new(async _ =>
+//{
+//    await MyAsyncFunction();
+//}, null, TimeSpan.Zero, TimeSpan.FromDays(25));
+//await Task.Delay(Timeout.Infinite);
