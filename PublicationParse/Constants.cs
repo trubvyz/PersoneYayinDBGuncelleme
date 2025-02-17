@@ -10,8 +10,8 @@
 
         public static Dictionary<string, string> UBYSServiceInformation = new()
         {
-            {"username", "raporlama.api"},
-            {"password", "5tNh7A*y"}
+            {"username", "buyukveri.api"},
+            {"password", "BkML5yzfGQ"}
         };
 
         public static string AkademikKadro = "AKADEMİK";

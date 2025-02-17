@@ -6,7 +6,7 @@ namespace PublicationParse
     {
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            _ = options.UseSqlServer("Server=DESKTOP-6U6JDPE;Database=BFI;User Id=emrekardal;Password=1;TrustServerCertificate=True;");
+            _ = options.UseSqlServer("Server=10.10.81.23;Database=TRU_BFI_TEST;User Id=emrekardal;Password=Ee159753*;TrustServerCertificate=True;");
         }
 
         public DbSet<Academicians> Academicians { get; set; }
