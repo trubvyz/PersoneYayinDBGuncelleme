@@ -63,7 +63,6 @@ namespace PublicationParse
         public string? KisiselEPosta { get; set; }
         public string? KisiselTelefon { get; set; }
     }
-
     public class Article
     {
         public string? YAYIN_ID { get; set; }
@@ -111,12 +110,10 @@ namespace PublicationParse
         public int? EntityTypeId { get; set; }
         public string? EntityTypeName { get; set; }
     }
-
     public class Base64Decoded
     {
         public Article[]? AE_2098001 { get; set; }
     }
-
     public class Academicians
     {
         [Key]
