@@ -112,10 +112,10 @@ async Task MyAsyncFunction()
     List<Articles> allArticles = [];
     foreach (var aca in academics)
     {
-        string? academicCVbyAuthorString = await URLClass.GetAcademicCVbyAuthor(aca.PersonEncryptedId);
-        string base64encodedString = AcademicCVParse.GetPublications(academicCVbyAuthorString);
+        string? academicCVbyAuthorString = await URLClass.GetAcademicCVbyAuthor(aca.PersonEncryptedId!);
+        string base64encodedString = AcademicCVParse.GetPublications(academicCVbyAuthorString!)!;
         Base64Decoded? sonuc = JsonConvert.DeserializeObject<Base64Decoded>(base64encodedString);
-        if (sonuc.AE_2098001 != null)
+        if (sonuc!.AE_2098001 != null)
         {
             foreach (Article artic in sonuc.AE_2098001)
             {
@@ -158,7 +158,7 @@ async Task MyAsyncFunction()
     List<Articles> correctedArticles = [];
     foreach (Articles article in allArticles)
     {
-        string articleName = string.Join("", article.ArticleName.Where(x => x != ' '))
+        string articleName = string.Join("", article.ArticleName!.Where(x => x != ' '))
             .ToLower().Trim()
             .Replace('ı', 'i')
             .Replace('ğ', 'g')
@@ -168,11 +168,11 @@ async Task MyAsyncFunction()
             .Replace('ç', 'c');
         articleName = Regex.Replace(articleName, pattern, "");
         if (!correctedArticles.Any(a => a.ArticleID == article.ArticleID ||
-        Regex.Replace(string.Join("", a.ArticleName.Where(x => x != ' '))
+        Regex.Replace(string.Join("", a.ArticleName!.Where(x => x != ' '))
         .ToLower().Trim().Replace('ı', 'i').Replace('ğ', 'g').Replace('ş', 's')
         .Replace('ü', 'u').Replace('ö', 'o').Replace('ç', 'c'), pattern, "") == articleName))
         {
-            List<string> authorsSplitted = [.. article.AuthorNames.Split(",")];
+            List<string> authorsSplitted = [.. article.AuthorNames!.Split(",")];
             article.PersonID = 0;
             bool chk = false;
             foreach (string author in authorsSplitted)
@@ -183,7 +183,7 @@ async Task MyAsyncFunction()
                 }
                 foreach (Academicians worker in context.Academicians)
                 {
-                    string workerSurnameandName = worker.SurnameName.ToLower().Trim()
+                    string workerSurnameandName = worker.SurnameName!.ToLower().Trim()
                         .Replace('ı', 'i')
                         .Replace('ğ', 'g')
                         .Replace('ğ', 'g')
