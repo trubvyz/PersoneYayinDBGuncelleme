@@ -23,7 +23,7 @@ async Task MyAsyncFunction()
             if (worker.KadroKodu == "AKADEMİK")
             {
                 personID = worker.PersonId;
-                personEncryptedId = worker.PersonEncryptedId;
+                personEncryptedId = worker.PersonEncryptedId!;
                 title = worker.AsliUnvan;
                 startDate = worker.GoreveBaslamaTarihi;
                 surnameName = worker.Soyadi + " " + worker.Adi;
