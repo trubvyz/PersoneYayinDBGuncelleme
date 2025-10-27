@@ -123,18 +123,30 @@ async Task MyAsyncFunction()
                 string month = artic.AY ?? "1";
                 month += "/";
                 string year = artic.YIL ?? "1";
+
+                if (month == "/")
+                {
+                    month = "1/";
+                }
+
+                if (year == "")
+                {
+                    year = "1";
+                }
+
                 string fullyear = day + month + year;
-                DateTime? dt = DateTime.Parse(fullyear);
+                DateTime? dt = DateTime.TryParse(fullyear, out DateTime parsedDate) ? parsedDate : null;
+
                 Articles articles = new()
                 {
                     PersonID = aca.PersonID,
                     ArticleName = artic.MAKALE_ADI,
                     Index = artic.ENDEKS,
                     AuthorNames = artic.YAZAR_ADI,
-                    ArticleID = artic.YAYIN_ID != null ? int.TryParse(artic.YAYIN_ID, out var YAYIN_ID) ? YAYIN_ID : (int?)null : null,
+                    ArticleID = artic.YAYIN_ID != null ? int.TryParse(artic.YAYIN_ID, out int YAYIN_ID) ? YAYIN_ID : null : null,
                     Year = dt,
-                    IndexID = artic.ENDEKS_ID != null ? int.TryParse(artic.ENDEKS_ID, out var ENDEKS_ID) ? ENDEKS_ID : (int?)null : null,
-                    ScopeID = artic.KAPSAM_ID != null ? int.TryParse(artic.KAPSAM_ID, out var KAPSAM_ID) ? KAPSAM_ID : (int?)null : null,
+                    IndexID = artic.ENDEKS_ID != null ? int.TryParse(artic.ENDEKS_ID, out int ENDEKS_ID) ? ENDEKS_ID : null : null,
+                    ScopeID = artic.KAPSAM_ID != null ? int.TryParse(artic.KAPSAM_ID, out int KAPSAM_ID) ? KAPSAM_ID : null : null,
                     JournalName = artic.DERGI_ADI,
                     CountryName = artic.ULKE_ADI,
                     City = artic.SEHIR,
@@ -144,7 +156,7 @@ async Task MyAsyncFunction()
                     ISSN = artic.ISSN,
                     AccessType = artic.ERISIM_TURU,
                     AccessLink = artic.ERISIM_LINKI,
-                    CiteCount = artic.ATIF_SAYISI != null ? int.TryParse(artic.ATIF_SAYISI, out var ATIF_SAYISI) ? ATIF_SAYISI : (int?)null : null,
+                    CiteCount = artic.ATIF_SAYISI != null ? int.TryParse(artic.ATIF_SAYISI, out int ATIF_SAYISI) ? ATIF_SAYISI : null : null,
                     AreaInfo = artic.ALAN_BILGISI,
                     Keywrds = artic.ANAHTAR_KELIME,
                     TESVPoint = artic.TESV_PUAN,
